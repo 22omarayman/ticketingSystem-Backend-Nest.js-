@@ -1,0 +1,21 @@
+import { Controller, Get, Post, Param, Body, ParseIntPipe, BadRequestException } from '@nestjs/common';
+import { CommentService, Comment } from './comments.service';
+import { CreateCommentDto } from './create-comment.dto';
+
+@Controller('comments')
+export class CommentController {
+  constructor(private readonly commentService: CommentService) {}
+
+   // Get comments for a specific ticket
+   @Get(':ticketId')
+   async getCommentsByTicket(@Param('ticketId') ticketId: string): Promise<Comment[]> {
+     return this.commentService.getCommentsByTicket(+ticketId); // Await the result from the service method
+   }
+ 
+   // Add a comment to a ticket
+   @Post()
+   async createComment(@Body() createCommentDto: CreateCommentDto): Promise<Comment> {
+     return this.commentService.createComment(createCommentDto); // Await the result from the service method
+   }
+}
+
