@@ -1,8 +1,20 @@
-import { Schema } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 
-export const CommentSchema = new Schema({
-  name: { type: String, required: true }, // Name of the commenter
-  text: { type: String, required: true }, // Comment text
-  posted: { type: Date, default: Date.now }, // Default to the current date and time
-  ticket: { type: Schema.Types.ObjectId, ref: 'Ticket', required: true }, // Reference to the related Ticket
-});
+@Schema()
+export class Comment extends Document {
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true })
+  text: string;
+
+  @Prop({ required: true })
+  posted: Date;
+
+  @Prop({ type: Types.ObjectId, ref: 'Ticket', required: true }) // Ensure this line exists
+  ticketId: Types.ObjectId; // Reference to the associated ticket
+}
+
+export const CommentSchema = SchemaFactory.createForClass(Comment);
+

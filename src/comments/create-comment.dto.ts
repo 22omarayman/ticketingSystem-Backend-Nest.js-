@@ -1,4 +1,4 @@
-import { IsString, IsInt, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateCommentDto {
   @IsString()
@@ -9,6 +9,6 @@ export class CreateCommentDto {
   @IsNotEmpty()
   readonly text: string;
 
-  @IsInt()
-  readonly ticketId: number;
+  @IsString()
+  readonly ticketId: string; // Add ticketId to link comments to tickets
 }

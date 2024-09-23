@@ -3,13 +3,13 @@ import { CreateCommentDto } from './create-comment.dto';
 import { validate } from 'class-validator';
 import { Ticket } from 'src/tickets/tickets.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 export interface Comment extends Document {
   readonly name: string;
   readonly text: string;
   readonly posted: Date;
-  readonly ticketId: Ticket; // Reference to the associated ticket
+  readonly ticketId: Types.ObjectId; // Reference to the associated ticket
 }
 
 export class CommentService {
@@ -18,16 +18,20 @@ export class CommentService {
   ) {}
 
   // Get all comments for a specific ticket
-  async getCommentsByTicket(ticketId: number): Promise<Comment[]> {
-    return this.commentModel.find({ ticketId }).exec(); // This returns a Promise<Comment[]>
+  async getCommentsByTicket(ticketId: string): Promise<Comment[]> {
+    return this.commentModel.find({ ticketId: ticketId }).exec(); // Ensure ticketId is used correctly
   }
+  
 
   // Add a new comment to a ticket
   async createComment(createCommentDto: CreateCommentDto): Promise<Comment> {
     const newComment = new this.commentModel({
       ...createCommentDto,
+      ticketId: createCommentDto.ticketId,
       posted: new Date(),
+
     });
+
     return newComment.save(); // This also returns a Promise<Comment>
   }
 }
